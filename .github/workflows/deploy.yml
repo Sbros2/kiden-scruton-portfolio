@@ -29,6 +29,9 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Apply GitHub Pages base path
+        run: node scripts/apply-pages-base.mjs
+
       - name: Remove heavy downloadable source documents from Pages artifact
         run: rm -rf dist/documents
 
