@@ -35,11 +35,28 @@ function rewriteFile(file) {
     text = text.replace(new RegExp(`${attr}='/(?!/)([^']*)'`, 'g'), (_match, path) => `${attr}='${prefixRootPath(`/${path}`)}'`);
   }
 
+  text = text.replace(/srcset="([^"]*)"/g, (_match, value) => `srcset="${rewriteSrcset(value)}"`);
+  text = text.replace(/srcset='([^']*)'/g, (_match, value) => `srcset='${rewriteSrcset(value)}'`);
+
   text = text.replace(/url\(\/(?!\/)([^)"']*)\)/g, (_match, path) => `url(${prefixRootPath(`/${path}`)})`);
   text = text.replace(/url\("\/(?!\/)([^")]*)"\)/g, (_match, path) => `url("${prefixRootPath(`/${path}`)}")`);
   text = text.replace(/url\('\/(?!\/)([^')]*)'\)/g, (_match, path) => `url('${prefixRootPath(`/${path}`)}')`);
 
   if (text !== original) writeFileSync(file, text);
+}
+
+function rewriteSrcset(value) {
+  return value
+    .split(',')
+    .map((candidate) => {
+      const leadingWhitespace = candidate.match(/^\s*/)?.[0] ?? '';
+      const trimmed = candidate.trim();
+      if (!trimmed) return candidate;
+
+      const [url, ...descriptor] = trimmed.split(/\s+/);
+      return `${leadingWhitespace}${[prefixRootPath(url), ...descriptor].join(' ')}`;
+    })
+    .join(',');
 }
 
 walk(distDir);
