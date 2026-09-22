@@ -36,7 +36,7 @@ With more than two circles, selecting the next circle becomes part of the experi
 The animations below compare fixed and randomized sequences and show how the resulting trajectories change. The presentation also explores overlapping-circle cases, four-circle patterns, and a possible extension to three dimensions.
 
 ## Original presentation
-[Download the final Spring 2025 presentation](/documents/circle-inversions-final.pptx) for the full sequence of constructions, examples, and animations.
+[Download the final Spring 2025 presentation](https://raw.githubusercontent.com/Sbros2/kiden-scruton-portfolio/main/public/documents/circle-inversions-final.pptx) for the full sequence of constructions, examples, and animations.
 
 ## What the visuals establish
 The animations make patterns and sensitivity visible. A fitted curve or a finite sequence is an observation to investigate, rather than a proof of a general geometric result. The project combines that visual intuition with explicit transformation code.

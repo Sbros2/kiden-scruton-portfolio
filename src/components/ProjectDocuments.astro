@@ -3,9 +3,14 @@ import {projectDocuments} from '../data/projectDocuments';
 import {statSync} from 'node:fs';
 const {slug}=Astro.props;
 const documents=projectDocuments[slug]||[];
-function fileSize(href:string){const bytes=statSync(`public${href}`).size;return bytes>=1000000?`${(bytes/1000000).toFixed(1)} MB`:`${Math.max(1,Math.round(bytes/1000))} KB`;}
+function isExternal(href:string){return /^https?:\/\//.test(href);}
+function fileSize(href:string){
+  if(isExternal(href)) return 'GitHub raw';
+  const bytes=statSync(`public${href}`).size;
+  return bytes>=1000000?`${(bytes/1000000).toFixed(1)} MB`:`${Math.max(1,Math.round(bytes/1000))} KB`;
+}
 ---
-{documents.length>0 && <section class="project-documents" aria-labelledby="documents-heading"><div class="section-top"><div><p class="eyebrow">Technical archive</p><h2 id="documents-heading">Project documentation</h2></div><p>Original records behind the design decisions and results.</p></div><div class="document-grid">{documents.map(doc=><a class="document-card" href={doc.href} download><span class="document-format">{doc.format} · {fileSize(doc.href)} <span aria-hidden="true">↓</span></span><h3>{doc.title}</h3><p>{doc.description}</p><span class="document-action">Download file</span></a>)}</div><p class="document-note">These source files preserve the original project record and team attribution. They may include draft wording or assumptions; the page above distinguishes demonstrated results from proposed work.</p></section>}
+{documents.length>0 && <section class="project-documents" aria-labelledby="documents-heading"><div class="section-top"><div><p class="eyebrow">Technical archive</p><h2 id="documents-heading">Project documentation</h2></div><p>Original records behind the design decisions and results.</p></div><div class="document-grid">{documents.map(doc=><a class="document-card" href={doc.href} download={!isExternal(doc.href)}><span class="document-format">{doc.format} · {fileSize(doc.href)} <span aria-hidden="true">↓</span></span><h3>{doc.title}</h3><p>{doc.description}</p><span class="document-action">Download file</span></a>)}</div><p class="document-note">These source files preserve the original project record and team attribution. They may include draft wording or assumptions; the page above distinguishes demonstrated results from proposed work.</p></section>}
 <style>
 .project-documents{margin:65px 0}.document-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.document-card{display:flex;flex-direction:column;align-items:start;padding:26px;border:1px solid var(--border);border-radius:12px;background:var(--panel);transition:border-color .2s}.document-card:hover{border-color:var(--cyan)}.document-format{display:flex;justify-content:space-between;width:100%;font-size:11px;letter-spacing:1px;color:var(--cyan)}.document-format span{font-size:20px}.document-card h3{font-size:20px;margin:18px 0 12px}.document-card p{font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:22px}.document-action{margin-top:auto;font-size:12px;color:var(--cyan)}.document-note{font-size:12px;color:var(--muted);max-width:800px;margin-top:20px;line-height:1.8}@media(max-width:700px){.document-grid{grid-template-columns:1fr}.document-card{padding:22px}}
 </style>

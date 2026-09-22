@@ -41,4 +41,4 @@ The most useful result was understanding the tradeoff. A faster revision did not
 The test campaign used an unloaded actuator. Operating pressure and oil temperature were not recorded, and the reduced model omitted several hydraulic effects. These results describe the tested configuration and trajectory.
 
 ## The paper
-The final draft lists Claudio Campana, Kiden Scruton, Kyle Burke, Shihab Sarwar, Asif Kingshuk, and Akin Tatoglu as authors. It is prepared for ASME’s International Mechanical Engineering Congress and Exposition (IMECE 2026). [Read the final draft](/documents/ai-motion-control-manuscript.pdf), the source for this page’s figures and reported results.
+The final draft lists Claudio Campana, Kiden Scruton, Kyle Burke, Shihab Sarwar, Asif Kingshuk, and Akin Tatoglu as authors. It is prepared for ASME’s International Mechanical Engineering Congress and Exposition (IMECE 2026). [Read the final draft](https://raw.githubusercontent.com/Sbros2/kiden-scruton-portfolio/main/public/documents/ai-motion-control-manuscript.pdf), the source for this page’s figures and reported results.
