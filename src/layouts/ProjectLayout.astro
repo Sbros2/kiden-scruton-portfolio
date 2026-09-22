@@ -1,0 +1,57 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ProjectImage from '../components/ProjectImage.astro';
+import ProjectDocuments from '../components/ProjectDocuments.astro';
+import CrceConcept from '../components/CrceConcept.astro';
+import CircleGallery from '../components/CircleGallery.astro';
+import {projectDocuments} from '../data/projectDocuments';
+import {projectMedia} from '../data/projectMedia';
+const {entry,showCover=true,hideGallery=false}=Astro.props;
+const data=entry.data;
+const media=projectMedia[entry.slug];
+const isSimulation=entry.slug==='2025-08-12-pcb-demo';
+const demo=entry.slug==='hazard-sensing-robot' ? {
+ src:'/assets/hsr-running-demo.gif', width:270, height:480,
+ alt:'The assembled HSR driving across a carpeted floor with its front lights illuminated.',
+ caption:'The assembled HSR in motion. Original 2022 Expo demonstration.'
+} : entry.slug==='arsh' ? {
+ src:'/assets/arsh-display-demo.gif', width:360, height:480,
+ alt:'ARSH transparent OLED prototype displaying QR-code text, followed by its connected development computer.',
+ caption:'Transparent-display prototype and development setup, April 2024.'
+} : isSimulation ? {
+ src:'/assets/piezo-falstad-demo.gif', width:1148, height:564,
+ alt:'Animated Falstad circuit showing the piezoelectric amplifier model, current indicators, and voltage readouts.',
+ caption:'Falstad preview from the saved final circuit. Sampled animation; playback timing is illustrative.'
+} : undefined;
+const hasRunningDemo=!!demo && !isSimulation;
+---
+<BaseLayout title={`${data.title} | Kiden Scruton`} description={data.summary}>
+ <header class="page-header"><a class="breadcrumb" href="/projects/">← All projects</a><p class="eyebrow">{data.discipline||'Project study'}</p><h1>{data.title}</h1><p class="intro">{data.summary}</p></header>
+ <dl class="project-facts"><div><dt>My role</dt><dd>{data.role||'Project study'}</dd></div><div><dt>Focus</dt><dd>{data.tags?.slice(0,3).join(', ')}</dd></div><div><dt>Outcome</dt><dd>{data.outcome||'Design exploration'}</dd></div></dl>
+ {media && showCover && <ProjectImage media={media.cover} hero class="project-hero"/>}
+ <slot name="before-copy"/>
+ {entry.slug==='crce-engine' && <CrceConcept/>}
+ <div class="project-body"><aside class="project-aside"><p class="eyebrow">In this project</p><nav class="project-section-nav" aria-label="Project sections"></nav>{projectDocuments[entry.slug]?.length>0 && <a class="text-link" href="#documents-heading">Documentation ↓</a>}</aside><article class="prose" data-project-copy><slot/></article></div>
+ {!hideGallery && media?.gallery.length>0 && <section id="project-images" aria-label="Project photographs and design images"><div class="section-top"><div><p class="eyebrow">A closer look</p><h2>{isSimulation?'Simulation figures & circuit design':['aerodynamic-panel-methods','circle-inversions','ai-assisted-motion-control'].includes(entry.slug)?'Figures & analysis':entry.slug==='crce-engine'?'Design views':'The build in detail'}</h2></div><p>{demo ? 'Select a photo or animation to explore it.' : 'Select an image to explore it.'}</p></div><div class:list={['gallery-grid',{two:media.gallery.length<3 || hasRunningDemo}]}>
+ {demo && <figure class="project-figure">
+  <a class="image-link" href={demo.src} data-lightbox data-caption={demo.caption} aria-label={`Enlarge demonstration: ${data.title}`} style="--image-fit:contain">
+   <img src={demo.src} alt={demo.alt} width={demo.width} height={demo.height} loading="lazy" decoding="async" />
+   <span class="image-enlarge" aria-hidden="true">↗</span>
+  </a>
+  <figcaption>{demo.caption}</figcaption>
+ </figure>}
+ {media.gallery.map(item=><ProjectImage media={item}/>)}</div></section>}
+ <slot name="after-gallery"/>
+ {entry.slug==='circle-inversions' && <CircleGallery/>}
+ <ProjectDocuments slug={entry.slug}/>
+ <div class="project-next"><a href="/projects/">← Explore more projects</a><a href="mailto:scrutonkiden@gmail.com">Ask me about this project ↗</a></div>
+</BaseLayout>
+<script>
+ const nav=document.querySelector('.project-section-nav');
+ const headings=Array.from(document.querySelectorAll<HTMLElement>('[data-project-copy] h2'));
+ if(nav){headings.forEach((heading,index)=>{if(!heading.id)heading.id=`section-${index+1}`;const a=document.createElement('a');a.href=`#${heading.id}`;a.textContent=heading.textContent;nav.append(a);});
+ const links=Array.from(nav.querySelectorAll('a'));let pending=false;
+ function update(){pending=false;const padding=parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)||0;const margin=headings[0]?parseFloat(getComputedStyle(headings[0]).scrollMarginTop)||0:0;const readingLine=padding+margin+24;let active=0;headings.forEach((h,i)=>{if(h.getBoundingClientRect().top<=readingLine)active=i;});links.forEach((a,i)=>{if(i===active)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});}
+ addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(update);}},{passive:true});addEventListener('resize',update);addEventListener('hashchange',update);document.fonts.ready.then(update);update();}
+</script>
+

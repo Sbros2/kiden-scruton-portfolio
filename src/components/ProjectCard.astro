@@ -1,0 +1,19 @@
+---
+import {Image} from 'astro:assets';
+import {projectMedia} from '../data/projectMedia';
+const {entry,number}=Astro.props;
+const data=entry.data;
+
+const cover=entry.slug==='2025-08-12-pcb-demo---copy-3'?undefined:projectMedia[entry.slug]?.cover;
+const widths=cover?[360,640,960].filter(w=>w<Math.min(cover.image.width,1200)).concat(Math.min(cover.image.width,1200)):[];
+---
+<article class="project-card">
+ <a class="project-card-link" href={`/projects/${entry.slug}/`}>
+  <div class="card-image" style={`--image-fit:${cover?.fit||'cover'};--image-position:${cover?.position||'center'}`}>
+   {cover ? <Image src={cover.image} alt={cover.alt} widths={widths} sizes="(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 560px" format="webp" quality={78} loading="lazy" /> : data.thumbnail && <img src={data.thumbnail} alt={data.title} loading="lazy" width="640" height="480" />}
+   {data.recognition && <span class="card-recognition">{data.recognition}</span>}
+  </div>
+  <div class="card-copy"><div class="card-meta"><span>{data.discipline||'Engineering study'}</span>{number && <span>{String(number).padStart(2,'0')}</span>}</div><h3>{data.title}<span aria-hidden="true">↗</span></h3><p>{data.summary}</p><div class="card-bottom"><span>{data.role||'Project study'}</span><span>View project <span aria-hidden="true">→</span></span></div></div>
+ </a>
+</article>
+

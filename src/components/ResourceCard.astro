@@ -1,0 +1,16 @@
+---
+const { entry } = Astro.props;
+const r = entry.data;
+---
+<article style="
+  border:1px solid rgba(29,233,182,0.22);
+  border-radius:16px;
+  background:#0e1418;
+  padding:14px;
+">
+  <div style="font-size:12px;color:#ffb74d;font-weight:700;letter-spacing:.5px">{r.kind}</div>
+  <a href={r.href} target="_blank" rel="noopener" style="color:#dff6f3;font-weight:700;display:block;margin:6px 0">
+    {r.title}
+  </a>
+  {r.blurb && <p style="color:#90a2a6;margin:0">{r.blurb}</p>}
+</article>

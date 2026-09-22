@@ -1,0 +1,236 @@
+﻿import React, { useEffect, useRef } from "react";
+import "./CircuitTraces.css";
+
+/**
+ * Full-screen PCB traces with synchronized glow pulses.
+ * - Traces are generated procedurally across the viewport.
+ * - Each path has a sampler so pulses stay on the line.
+ * - Speeds are normalized so all pulses finish a lap in the same period.
+ */
+export default function CircuitTraces({
+  period = 6,             // seconds for a full lap (all paths line up)
+  pitch = 54,             // grid spacing (px @ 1x)
+  hCount = 6,             // number of horizontal buses
+  vCount = 5,             // number of vertical buses
+  jitter = 0.28,          // 0..~0.4 jitter factor for points
+  lineWidth = 2,          // base trace width (px @ 1x)
+  lineColor = "rgba(29,233,182,0.25)", // dim teal
+  pulseCount = 2,         // pulses per path
+  pulseLen = 26,          // length of bright segment (px @ 1x)
+  pulseGlow = 16,         // shadow blur (px @ 1x)
+  pulseColorA = "hsl(170 100% 70%)",   // teal
+  pulseColorB = "hsl(320 100% 70%)",   // magenta accent (alternates)
+}) {
+  const ref = useRef(null);
+  const rafRef = useRef(0);
+
+  useEffect(() => {
+    const canvas = ref.current;
+    const ctx = canvas.getContext("2d", { alpha: true });
+
+    let dpr = Math.min(2, window.devicePixelRatio || 1);
+    let W = 0, H = 0;
+
+    // A path is an array of {x,y} in canvas pixels
+    // For fast sampling, we keep segments with cumulative length.
+    function buildSampler(points) {
+      const segs = [];
+      let total = 0;
+      for (let i = 0; i < points.length - 1; i++) {
+        const a = points[i], b = points[i + 1];
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const len = Math.hypot(dx, dy);
+        segs.push({ a, b, len });
+        total += len;
+      }
+      const cumulative = [];
+      let acc = 0;
+      for (const s of segs) {
+        acc += s.len;
+        cumulative.push(acc);
+      }
+      const sample = (s) => {
+        // sample by arc-length s (0..total)
+        if (total <= 0) return { x: points[0].x, y: points[0].y, dirX: 1, dirY: 0 };
+        s = ((s % total) + total) % total; // wrap
+        let i = 0;
+        while (cumulative[i] < s) i++;
+        const prevCum = i === 0 ? 0 : cumulative[i - 1];
+        const seg = segs[i];
+        const t = seg.len ? (s - prevCum) / seg.len : 0;
+        const x = seg.a.x + (seg.b.x - seg.a.x) * t;
+        const y = seg.a.y + (seg.b.y - seg.a.y) * t;
+        const dirX = seg.len ? (seg.b.x - seg.a.x) / seg.len : 1;
+        const dirY = seg.len ? (seg.b.y - seg.a.y) / seg.len : 0;
+        return { x, y, dirX, dirY };
+      };
+      return { total, sample };
+    }
+
+    function rand(min, max) { return Math.random() * (max - min) + min; }
+    const choice = (arr) => arr[(Math.random() * arr.length) | 0];
+
+    // Generate Manhattan-style path running across width with jogs
+    function genHorizontal(y) {
+      const pts = [];
+      const step = rand(pitch * 1.2, pitch * 1.8);
+      let x = -pitch; // start off-canvas so it spans fully
+      const end = W + pitch;
+      let dir = choice([-1, 1]);
+      while (x < end) {
+        const jx = (Math.random() - 0.5) * pitch * jitter;
+        const jy = (Math.random() - 0.5) * pitch * jitter;
+        pts.push({ x: Math.max(-pitch, Math.min(end, x + jx)), y: y + jy });
+        // occasional vertical jog
+        if (Math.random() < 0.35) {
+          const jog = (Math.random() < 0.5 ? -1 : 1) * pitch * (0.6 + Math.random() * 0.6);
+          pts.push({ x: pts[pts.length - 1].x, y: Math.max(-pitch, Math.min(H + pitch, y + jog + jy)) });
+          // back to row
+          pts.push({ x: pts[pts.length - 1].x + step * 0.6, y: y + jy * 0.5 });
+        } else {
+          pts.push({ x: x + step, y: y + jy * 0.3 });
+        }
+        x += step;
+        dir *= -1;
+      }
+      return pts;
+    }
+
+    // Generate vertical path running across height with jogs
+    function genVertical(x) {
+      const pts = [];
+      const step = rand(pitch * 1.2, pitch * 1.8);
+      let y = -pitch;
+      const end = H + pitch;
+      let dir = choice([-1, 1]);
+      while (y < end) {
+        const jx = (Math.random() - 0.5) * pitch * jitter;
+        const jy = (Math.random() - 0.5) * pitch * jitter;
+        pts.push({ x: x + jx, y: Math.max(-pitch, Math.min(end, y + jy)) });
+        // occasional horizontal jog
+        if (Math.random() < 0.35) {
+          const jog = (Math.random() < 0.5 ? -1 : 1) * pitch * (0.6 + Math.random() * 0.6);
+          pts.push({ x: Math.max(-pitch, Math.min(W + pitch, x + jog + jx)), y: pts[pts.length - 1].y });
+          // back to column
+          pts.push({ x: x + jx * 0.5, y: pts[pts.length - 1].y + step * 0.6 });
+        } else {
+          pts.push({ x: x + jx * 0.3, y: y + step });
+        }
+        y += step;
+        dir *= -1;
+      }
+      return pts;
+    }
+
+    // Build the full set of paths and their samplers
+    let paths = [];
+    let samplers = [];
+    function rebuild() {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = Math.floor(window.innerWidth * dpr);
+      H = Math.floor(window.innerHeight * dpr);
+      canvas.width = W;
+      canvas.height = H;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+
+      paths = [];
+      samplers = [];
+
+      // Horizontal buses
+      const rows = hCount;
+      for (let i = 0; i < rows; i++) {
+        const y = ((i + 1) / (rows + 1)) * H;
+        const pts = genHorizontal(y);
+        paths.push(pts);
+      }
+      // Vertical buses
+      const cols = vCount;
+      for (let j = 0; j < cols; j++) {
+        const x = ((j + 1) / (cols + 1)) * W;
+        const pts = genVertical(x);
+        paths.push(pts);
+      }
+
+      // Build samplers
+      for (const p of paths) samplers.push(buildSampler(p));
+    }
+
+    function drawBase() {
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = lineWidth * dpr;
+
+      ctx.beginPath();
+      for (const p of paths) {
+        for (let i = 0; i < p.length - 1; i++) {
+          const a = p[i], b = p[i + 1];
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+        }
+      }
+      ctx.stroke();
+    }
+
+    function drawPulses(tms) {
+      const t = tms / 1000; // seconds
+      // Pulses traverse each path in the same period
+      for (let i = 0; i < paths.length; i++) {
+        const sampler = samplers[i];
+        const L = sampler.total;
+        if (L <= 0) continue;
+
+        for (let k = 0; k < pulseCount; k++) {
+          const phase = k / pulseCount;      // evenly spaced
+          const s = ((t / period) + phase) * L;
+          const { x, y, dirX, dirY } = sampler.sample(s);
+          // second point a little ahead to make a bright segment
+          const ahead = sampler.sample(s + pulseLen * dpr);
+          const color = (k % 2 === 0) ? pulseColorA : pulseColorB;
+
+          ctx.save();
+          ctx.globalCompositeOperation = "lighter";
+          ctx.strokeStyle = color;
+          ctx.lineWidth = (lineWidth * 1.6) * dpr;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = pulseGlow * dpr;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(ahead.x, ahead.y);
+          ctx.stroke();
+
+          // core dot
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(x, y, 1.6 * dpr, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+    }
+
+    function frame(t) {
+      ctx.clearRect(0, 0, W, H);
+      drawBase();
+      drawPulses(t);
+      rafRef.current = requestAnimationFrame(frame);
+    }
+
+    const onResize = () => { rebuild(); };
+    rebuild();
+    rafRef.current = requestAnimationFrame(frame);
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [
+    period, pitch, hCount, vCount, jitter,
+    lineWidth, lineColor, pulseCount, pulseLen, pulseGlow,
+    pulseColorA, pulseColorB
+  ]);
+
+  return <canvas ref={ref} className="circuit-canvas" />;
+}

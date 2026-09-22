@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InteractiveLab from '../components/InteractiveLab.astro';
+---
+<BaseLayout title="Engineering Lab | Kiden Scruton" description="Interactive CAD views, simulations, and live hardware dashboard concepts from Kiden Scruton's engineering portfolio.">
+  <header class="page-header">
+    <p class="eyebrow">Engineering lab</p>
+    <h1>CAD, simulation, and live hardware.</h1>
+    <p class="intro">A place for the portfolio to show how I think through assemblies, printed parts, simulated behavior, and future live Raspberry Pi or server telemetry.</p>
+  </header>
+  <InteractiveLab />
+  <section class="lab-notes section-block">
+    <div>
+      <p class="eyebrow">Build direction</p>
+      <h2>Make the site behave like a bench notebook.</h2>
+    </div>
+    <p>The viewer now loads real STL and OBJ meshes from the project folders. The next layer is to add richer engineering overlays: dimension callouts, section views, circuit sliders, and a live Pi endpoint when hardware is available.</p>
+  </section>
+</BaseLayout>

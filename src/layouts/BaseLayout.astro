@@ -1,0 +1,22 @@
+---
+import '../styles/site.css';
+import ImageViewer from '../components/ImageViewer.astro';
+import ParallaxGrid from '../components/bg/ParallaxGrid.astro';
+const {title='Kiden Scruton | Engineering Portfolio',description='Hardware, mechanical design, and experimental prototypes by Kiden Scruton: gyroscopic stabilization, rocket payloads, electronics, and fabrication.'}=Astro.props;
+const path=Astro.url.pathname;
+const backgroundMode=path==='/'?'home':path.replace(/\/$/,'')==='/projects'?'work':undefined;
+const nav=[['Work','/projects/'],['Lab','/lab/'],['About','/about/'],['Resources','/resources/'],['Resume','/resume/']];
+---
+<!doctype html>
+<html lang="en">
+ <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content={description}/><meta name="theme-color" content="#0b1113"/><title>{title}</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet"/></head>
+ <body data-background={backgroundMode} style={backgroundMode ? 'isolation:isolate' : undefined}>
+  {backgroundMode && <ParallaxGrid mode={backgroundMode} />}
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header"><div class="wrap nav"><a class="brand" href="/" aria-label="Kiden Scruton home"><span class="brand-mark" aria-hidden="true">KS<span>.</span></span><span class="brand-name">KIDEN SCRUTON<small>ENGINEERING PORTFOLIO</small></span></a><nav aria-label="Main navigation">{nav.map(([label,url])=><a href={url} aria-current={path.startsWith(url)?'page':undefined}>{label}</a>)}</nav></div></header>
+  <main id="main" class="wrap"><slot/></main>
+  <footer class="site-footer"><div class="wrap"><div class="footer-top"><div><p class="eyebrow">Get in touch</p><h2>Let’s talk engineering.</h2></div><a class="contact-link" href="mailto:scrutonkiden@gmail.com">scrutonkiden@gmail.com <span aria-hidden="true">↗</span></a></div><div class="footer-bottom"><span>© {new Date().getFullYear()} Kiden Scruton</span><div><a href="/resume/">Resume</a><a href="https://www.linkedin.com/in/Kiden-Scruton/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="/interests/">Interests</a><a href="/resources/">Resources</a></div></div></div></footer>
+  <ImageViewer/>
+ </body>
+</html>
+

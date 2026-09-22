@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/profiles.css';
+import {experience,skillGroups} from '../data/experience';
+---
+<BaseLayout title="Resume | Kiden Scruton" description="Kiden Scruton's experience at HiveTech AI, Diagnostic Devices Inc., and the University of Hartford Makerspace, plus engineering projects and leadership.">
+ <p class="resume-print-name">Kiden Scruton</p>
+ <header class="page-header"><p class="eyebrow">Resume</p><h1>Experience & qualifications</h1><p class="intro">Aerospace engineering background with practical experience in hardware development, device testing, embedded programming, and fabrication.</p><div class="resume-contact"><a href="mailto:scrutonkiden@gmail.com">scrutonkiden@gmail.com ↗</a><a href="https://www.linkedin.com/in/Kiden-Scruton/">LinkedIn ↗</a><button type="button" class="print-resume">Print / save as PDF ↓</button></div></header>
+ <div class="resume-layout"><nav class="resume-nav" aria-label="Resume sections"><a href="#experience">Experience</a><a href="#education">Education</a><a href="#projects">Selected projects</a><a href="#skills">Technical skills</a><a href="#leadership">Leadership</a><a href="#recognition">Recognition</a></nav><div class="resume-content">
+ <section id="experience" class="resume-section"><p class="eyebrow">01 / Experience</p><h2>Engineering & fabrication</h2>{experience.map(item=><article class="experience-entry"><div class="entry-heading"><div><h3>{item.url ? <a href={item.url} target="_blank" rel="noopener noreferrer">{item.company} ↗</a> : item.company}</h3><p class="entry-role">{item.role}</p></div><p class="entry-date">{item.period}</p></div><p>{item.description}</p><ul>{item.contributions.map(point=><li>{point}</li>)}</ul><div class="skill-tags">{item.skills.map(skill=><span>{skill}</span>)}</div></article>)}</section>
+ <section id="education" class="resume-section"><p class="eyebrow">02 / Education</p><h2>University of Hartford</h2><p class="entry-role">Aerospace engineering studies</p><p>Project work spanning embedded systems, engineering design, mechatronics, controls, and payload development. Activities include AIAA, RockSat-C, and founding involvement in AURORA, the Advanced Undergraduate Rocketry Operations and Research Association.</p></section>
+ <section id="projects" class="resume-section"><p class="eyebrow">03 / Selected projects</p><h2>Engineering in practice</h2><article class="resume-project"><h3><a href="/projects/rocksat-c/">RockSat-C payload development ↗</a></h3><p class="entry-role">Co-lead · vibration subsystem</p><p>Applied Fourier analysis to accelerometer records, developed transducer assembly concepts, and contributed to payload prototyping and integration. Helped coordinate team tasks and budgets; participated in the 2025 launch team.</p></article><article class="resume-project"><h3><a href="/projects/arsh/">ARSH wearable sensing headset ↗</a></h3><p class="entry-role">Programming & procurement lead</p><p>Developed the Python-based QR scanning and display workflow on Raspberry Pi hardware, shared hardware development, and supported the team’s wearable IoT demonstration.</p></article><article class="resume-project"><h3><a href="/projects/hazard-sensing-robot/">Hazard Sensing Robot ↗</a></h3><p class="entry-role">Programming & hardware integration</p><p>Developed the XIAO sensor-logging program and an early proof of concept, then helped integrate sensing, onboard storage, and the physical robot.</p></article><article class="resume-project"><h3><a href="/projects/brennan-gyro-monorail/">Gyroscopic monorail prototype ↗</a></h3><p class="entry-role">Modeling & prototyping</p><p>Connected dynamic modeling and LabVIEW control simulation with CAD and a physical flywheel prototype. Identified flywheel mass and motor-speed control as key limitations.</p></article></section>
+ <section id="skills" class="resume-section"><p class="eyebrow">04 / Technical skills</p><h2>Tools & methods</h2><div class="resume-skills">{skillGroups.map(group=><div><h3>{group.title}</h3><p>{group.items}</p></div>)}</div></section>
+ <section id="leadership" class="resume-section"><p class="eyebrow">05 / Leadership</p><h2>Organizations & entrepreneurship</h2>
+  <article class="resume-project leadership-entry">
+   <img class="leadership-logo leadership-crest" src="/assets/kappa-sigma-crest.png" alt="Kappa Sigma crest" width="175" height="300" loading="lazy" />
+   <div><div class="entry-heading"><h3>Kappa Sigma · University of Hartford</h3><p class="entry-date">Dec 2023–Dec 2024</p></div><p class="entry-role">Founding President</p>
+   <p class="leadership-milestone">Built from the ground up · Chartered January 2026</p>
+   <p>Founded the organization with two of my best friends, building a chapter from nothing. As founding president, I developed recruitment and organizational processes, led events, and helped establish a culture of service and shared responsibility.</p>
+   <p>Achieving our charter in January 2026 cemented the chapter’s status and turned the foundation we built together into a lasting presence at the university.</p></div>
+  </article>
+  <article class="resume-project leadership-entry">
+   <img class="leadership-logo" src="/assets/scruton-brothers-logo.png" alt="Scruton Brother’s Ice Cream logo" width="180" height="150" loading="lazy" />
+   <div><div class="entry-heading"><h3>Scruton Brother’s Ice Cream</h3><p class="entry-date">Jan 2021–Jan 2023</p></div><p class="entry-role">Co-Founder · Southern Pines, NC</p>
+   <p class="leadership-milestone">Family-founded · Allergy-friendly</p>
+   <p>Built an ice cream shop from the ground up with my family, making dairy-free and gluten-free choices a central part of the menu. The mission was personal: my own food allergies shaped our commitment to giving more people options they could enjoy.</p>
+   <p>My brother and I oversaw daily operations, running the business for a couple of years before it closed in 2023. Working through equipment and supply-chain challenges taught me to solve practical problems, communicate clearly, and take responsibility for a business people depended on.</p>
+   <p class="leadership-links"><a href="https://www.instagram.com/scrutonbrothersicecream/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.linkedin.com/company/100542808/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://itsthesway.com/scruton-brothers-ice-cream-opens-on-morganton/" target="_blank" rel="noopener noreferrer">Our opening story ↗</a></p></div>
+  </article>
+ </section>
+ <section id="recognition" class="resume-section"><p class="eyebrow">06 / Recognition</p><h2>Selected team achievements</h2><ul><li><strong>ARSH, Spring 2024:</strong> winner of the HSB-sponsored Expo section; separately listed as a sophomore honorable mention in the <a href="https://www.hartford.edu/news/press-releases/2024/05/ns-spring-ceta-expo-recap.aspx">university recap</a>.</li><li><strong>Hazard Sensing Robot, 2022:</strong> tied first place at the CETA Expo, as recorded in the team report; named among the <a href="https://www.hartford.edu/unotes/2022/12/ceta-design-expo-features-student-inventions.aspx">university’s winning projects</a>.</li></ul></section>
+ </div></div>
+ <div class="profile-cta"><div><h2>Let’s talk about your project.</h2><p>For more about my approach and interests, visit <a href="/about/">About me</a>.</p></div><a class="button primary" href="mailto:scrutonkiden@gmail.com">Get in touch ↗</a></div>
+</BaseLayout>
+<script>
+ document.querySelector('.print-resume')?.addEventListener('click',()=>window.print());
+
+ const sectionLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.resume-nav a[href^="#"]'));
+ const sections = sectionLinks.map(link => document.getElementById(link.hash.slice(1)));
+ let scheduled = false;
+
+ function updateActiveSection() {
+  scheduled = false;
+  // Match the anchor offset so clicks and ordinary scrolling select the same section.
+  const scrollPadding = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+  const scrollMargin = sections[0] ? parseFloat(getComputedStyle(sections[0]).scrollMarginTop) || 0 : 0;
+  const readingLine = scrollPadding + scrollMargin + 32;
+  let activeIndex = 0;
+  sections.forEach((section, index) => {
+   if (section && section.getBoundingClientRect().top <= readingLine) activeIndex = index;
+  });
+  if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+   activeIndex = sectionLinks.length - 1;
+  }
+  sectionLinks.forEach((link, index) => {
+   if (index === activeIndex) link.setAttribute('aria-current', 'location');
+   else link.removeAttribute('aria-current');
+  });
+ }
+
+ function scheduleUpdate() {
+  if (!scheduled) {
+   scheduled = true;
+   requestAnimationFrame(updateActiveSection);
+  }
+ }
+ window.addEventListener('scroll', scheduleUpdate, {passive:true});
+ window.addEventListener('resize', scheduleUpdate);
+ window.addEventListener('pageshow', scheduleUpdate);
+ window.addEventListener('hashchange', scheduleUpdate);
+ document.fonts.ready.then(scheduleUpdate);
+ updateActiveSection();
+</script>

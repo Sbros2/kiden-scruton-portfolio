@@ -1,0 +1,15 @@
+---
+const figures=[
+ ['circle-multipoint.png','Point-by-point construction','Blue source points and red inverted points connected by green lines through the inversion center.'],
+ ['circle-center-line.png','A line through the center','Color-matched point pairs show how inversion changes distance while preserving the radial line. The inversion center itself is excluded from the mapping.'],
+ ['circle-sine-points.png','Sinusoidally arranged points','A static comparison of the blue source points and their red inverted positions relative to the dashed inversion circle.'],
+ ['circle-line.png','Line to circle','A line away from the inversion center maps to a circle through the center.'],
+ ['circle-arc.png','Arc geometry','Original arc-to-circle construction from the presentation.'],
+ ['circle-two.gif','Alternating two circles','Successive point inversions between two fixed circles.'],
+ ['circle-trace.gif','Tracing the orbit','The original two-circle experiment showing the point trajectory and trace circle.'],
+ ['circle-periodic.gif','Periodic four-circle sequence','Repeated A → B → C → D inversions with a fixed order.'],
+ ['circle-random.gif','Randomized four-circle sequence','A contrasting experiment with randomly selected inversion circles.'],
+ ['circle-inversions.gif','Inverting a function','The original sine-curve inversion animation.']
+];
+---
+<section aria-labelledby="circle-gallery"><div class="section-top"><div><p class="eyebrow">Visual experiments</p><h2 id="circle-gallery">From one inversion to repeated patterns</h2></div><p>Select a figure or animation to enlarge it.</p></div><div class="gallery-grid two">{figures.map(([file,title,caption])=><figure class="project-figure"><a class="image-link" href={`/assets/${file}`} data-lightbox data-caption={`${title}. ${caption}`} style="--image-fit:contain;background:white" aria-label={`Enlarge: ${title}`}><img src={`/assets/${file}`} alt={`${title}: ${caption}`} loading="lazy"/><span class="image-enlarge" aria-hidden="true">↗</span></a><figcaption><strong>{title}.</strong> {caption}</figcaption></figure>)}</div></section>

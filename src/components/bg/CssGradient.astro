@@ -1,0 +1,24 @@
+---
+/* zero props */
+---
+<style>
+  .bg-grad {
+    position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(1200px 800px at 20% -10%, rgba(29,233,182,0.08), transparent 90%),
+      radial-gradient(900px 700px at 85% 120%, rgba(255,183,77,0.06), transparent 90%),
+      #0b0d0f;
+    animation: drift 40s linear infinite alternate;
+  }
+  @keyframes drift {
+    0% { filter: hue-rotate(0deg) saturate(110%); }
+    100% { filter: hue-rotate(8deg) saturate(120%); }
+  }
+  .scan {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .06;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,.5) 1px, transparent 1px);
+    background-size: 100% 3px; mix-blend-mode: overlay;
+  }
+</style>
+<div class="bg-grad"></div>
+<div class="scan"></div>

@@ -1,0 +1,16 @@
+---
+import {Image, getImage} from 'astro:assets';
+import type {ProjectImage} from '../data/projectMedia';
+interface Props {media: ProjectImage; hero?: boolean; class?: string; caption?: boolean;}
+const {media,hero=false,class:className='',caption=true}=Astro.props;
+const widths=[400,800,1200,1600].filter(w=>w<Math.min(media.image.width,1800));
+widths.push(Math.min(media.image.width,1800));
+const full=await getImage({src:media.image,width:Math.min(media.image.width,1800),format:'webp',quality:85});
+---
+<figure class:list={['project-figure',className]}>
+ <a class="image-link" href={full.src} data-lightbox data-caption={media.caption} aria-label={`Enlarge image: ${media.alt}`} style={`--image-fit:${media.fit||'cover'};--image-position:${media.position||'center'};`}>
+  <Image src={media.image} alt={media.alt} widths={widths} sizes={hero ? '(max-width: 760px) 92vw, 1100px' : '(max-width: 760px) 92vw, 560px'} format="webp" quality={82} loading={hero?'eager':'lazy'} decoding="async" fetchpriority={hero?'high':'auto'} />
+  <span class="image-enlarge" aria-hidden="true">↗</span>
+ </a>
+ {caption && <figcaption>{media.caption}</figcaption>}
+</figure>

@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import {getCollection} from 'astro:content';
+const projects=(await getCollection('projects')).sort((a,b)=>(a.data.order??99)-(b.data.order??99));
+const flagshipSlugs=['brennan-gyro-monorail','rocksat-c','arsh','hazard-sensing-robot'];
+const flagship=flagshipSlugs.map(slug=>projects.find(p=>p.slug===slug)).filter(Boolean);
+const studies=projects.filter(p=>!flagshipSlugs.includes(p.slug));
+---
+<BaseLayout title="Projects | Kiden Scruton"><header class="page-header"><p class="eyebrow">The project archive</p><h1>Engineering in practice.</h1><p class="intro">Physical builds first, followed by the simulations, design studies, and personal experiments behind my interests.</p></header><section aria-labelledby="flagship-title"><div class="section-top"><h2 id="flagship-title">Selected hardware projects</h2></div><div class="project-grid">{flagship.map((entry,i)=><ProjectCard entry={entry} number={i+1}/>)}</div></section><section class="section-block" aria-labelledby="studies-title"><div class="section-top"><div><p class="eyebrow">Further exploration</p><h2 id="studies-title">Design studies & other projects</h2></div></div><div class="project-grid">{studies.map(entry=><ProjectCard entry={entry}/>)}</div></section></BaseLayout>

@@ -1,0 +1,94 @@
+---
+import CadViewer from './CadViewer.jsx';
+---
+<section class="lab-grid" aria-label="Interactive engineering lab">
+  <article class="lab-panel cad-panel">
+    <div class="lab-panel-head">
+      <div>
+        <p class="eyebrow">3D CAD viewer</p>
+        <h2>Inspect real mesh exports.</h2>
+      </div>
+      <span class="status-pill">STL / OBJ</span>
+    </div>
+    <CadViewer client:load />
+  </article>
+
+  <article class="lab-panel sim-panel">
+    <p class="eyebrow">Interactive simulations</p>
+    <h2>Turn analysis into something explorable.</h2>
+    <p>The site includes interactive engineering demos alongside source project records. The best pages pair a physical build with the model, simulation, or report that shaped the design decision.</p>
+    <div class="sim-links">
+      <a href="/projects/brennan-gyro-monorail/#stabilization-simulator">
+        <strong>Gyro monorail simulator</strong>
+        <span>Lean angle, flywheel speed, damping, and control response.</span>
+      </a>
+      <a href="/interests/#engine-sim">
+        <strong>Engine motion simulator</strong>
+        <span>Crank-slider geometry connected to your engine and Automation-style interests.</span>
+      </a>
+      <a href="/projects/2025-08-12-pcb-demo/">
+        <strong>Piezo circuit study</strong>
+        <span>PSpice verification and EasyEDA single-layer PCB documentation.</span>
+      </a>
+      <a href="/projects/aerodynamic-panel-methods/">
+        <strong>Fluid simulation archive</strong>
+        <span>COMSOL and MATLAB figures from fluids work.</span>
+      </a>
+    </div>
+  </article>
+
+  <article class="lab-panel dashboard-panel" data-pi-dashboard>
+    <div class="lab-panel-head">
+      <div>
+        <p class="eyebrow">Pi / server dashboard</p>
+        <h2>Live hardware status hook.</h2>
+      </div>
+      <span class="status-pill" data-pi-state>Offline demo</span>
+    </div>
+    <p>This dashboard is ready to read a JSON status endpoint from a Raspberry Pi, lab server, or home server. Until an endpoint is added, it shows local demo telemetry.</p>
+    <dl class="telemetry-grid">
+      <div><dt>CPU</dt><dd data-metric="cpu">--</dd></div>
+      <div><dt>Memory</dt><dd data-metric="memory">--</dd></div>
+      <div><dt>Temp</dt><dd data-metric="temp">--</dd></div>
+      <div><dt>Uptime</dt><dd data-metric="uptime">--</dd></div>
+    </dl>
+    <code class="endpoint-note">Expected endpoint: /data/pi-status.json</code>
+  </article>
+</section>
+
+<script>
+  const dashboard = document.querySelector('[data-pi-dashboard]');
+  const setMetric = (name, value) => {
+    const node = dashboard?.querySelector(`[data-metric="${name}"]`);
+    if (node) node.textContent = value;
+  };
+
+  async function loadPiStatus() {
+    const demo = {
+      cpu: `${Math.round(18 + Math.random() * 16)}%`,
+      memory: `${Math.round(42 + Math.random() * 9)}%`,
+      temp: `${(41 + Math.random() * 4).toFixed(1)} C`,
+      uptime: 'local demo',
+    };
+
+    try {
+      const response = await fetch('/data/pi-status.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('No Pi status endpoint');
+      const status = await response.json();
+      setMetric('cpu', status.cpu ?? demo.cpu);
+      setMetric('memory', status.memory ?? demo.memory);
+      setMetric('temp', status.temp ?? demo.temp);
+      setMetric('uptime', status.uptime ?? demo.uptime);
+      dashboard?.querySelector('[data-pi-state]')?.replaceChildren('Live');
+    } catch {
+      setMetric('cpu', demo.cpu);
+      setMetric('memory', demo.memory);
+      setMetric('temp', demo.temp);
+      setMetric('uptime', demo.uptime);
+      dashboard?.querySelector('[data-pi-state]')?.replaceChildren('Offline demo');
+    }
+  }
+
+  loadPiStatus();
+  window.setInterval(loadPiStatus, 8000);
+</script>

@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EngineSim from '../components/EngineSim.jsx';
+---
+<BaseLayout title="Interests | Kiden Scruton" description="Personal interests behind Kiden Scruton's engineering portfolio, including engines, simulation, computers, model rocketry, and hands-on mechanical work.">
+  <header class="page-header">
+    <p class="eyebrow">Personal interests</p>
+    <h1>The things I keep coming back to.</h1>
+    <p class="intro">A lot of my engineering taste comes from interests outside class: engines, games that expose mechanical tradeoffs, computers, model rocketry, cars, fabrication, and hands-on repair.</p>
+  </header>
+
+  <section class="interest-grid" aria-label="Personal interests">
+    <article>
+      <p class="eyebrow">Mechanisms</p>
+      <h2>Engines and moving assemblies</h2>
+      <p>I like seeing how constraints turn into geometry: crankshafts, rods, pistons, timing, balance, and packaging. That is part of why the CRCE engine concept and the Brennan monorail matter to me.</p>
+    </article>
+    <article>
+      <p class="eyebrow">Simulation</p>
+      <h2>Games as engineering sandboxes</h2>
+      <p>Automation-style engine design is interesting because it makes tradeoffs visible. This JavaScript simulator is the start of bringing that same curiosity into the portfolio.</p>
+    </article>
+    <article>
+      <p class="eyebrow">Workshop</p>
+      <h2>Computers, cars, rockets, and fabrication</h2>
+      <p>Custom computers, model aircraft, model rocketry, welding, off-road work, and automotive maintenance all point at the same habit: I like systems I can touch, tune, and understand.</p>
+    </article>
+  </section>
+
+  <section id="engine-sim" class="section-block" aria-labelledby="engine-sim-title">
+    <div class="section-top">
+      <div>
+        <p class="eyebrow">JavaScript simulator</p>
+        <h2 id="engine-sim-title">Engine motion study</h2>
+      </div>
+      <p>A browser recreation of the kind of engine-motion thinking I like: crank radius, rod length, piston travel, RPM, and firing timing.</p>
+    </div>
+    <EngineSim client:load />
+  </section>
+</BaseLayout>

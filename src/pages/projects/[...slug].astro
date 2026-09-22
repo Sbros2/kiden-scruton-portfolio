@@ -1,0 +1,8 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import {getCollection} from 'astro:content';
+export async function getStaticPaths(){return (await getCollection('projects')).filter(p=>!['brennan-gyro-monorail','rocksat-c','2025-08-12-pcb-demo---copy-3'].includes(p.slug)).map(entry=>({params:{slug:entry.slug},props:{entry}}));}
+const {entry}=Astro.props;
+const {Content}=await entry.render();
+---
+<ProjectLayout entry={entry}><Content/></ProjectLayout>

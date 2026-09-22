@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const source=fs.readFileSync(new URL('../src/components/GyroSim.jsx',import.meta.url),'utf8');
+const model=source.slice(source.indexOf('function rk4Step'),source.indexOf('function drawTimePlot'));
+const ctx=vm.createContext({});vm.runInContext(model,ctx);
+const p={Ib:.1022,Is:.003,omega:628,Kp:3,Kd:.01,mgh:6,phi0Deg:20,phiDot0Deg:0,dt:.01,totalTime:10};
+const a=ctx.simulate(p),b=ctx.simulate({...p,dt:.005});
+assert.equal(a.length,1001);assert.ok(Math.abs(a.at(-1).phiDeg-b.at(-1).phiDeg)<.001,'step refinement should converge');
+const stopped=ctx.simulate({...p,omega:0});assert.ok(stopped.fallen);assert.ok(stopped.at(-1).t<10);
+const damped=ctx.simulate({...p,Kd:2.5,dt:.05});assert.ok(!damped.error);assert.ok(damped.every(x=>Number.isFinite(x.phiDeg)));assert.ok(Math.abs(damped.at(-1).phiDeg)<20);
+const extreme=ctx.simulate({...p,Ib:.01,Is:.2,omega:4000,Kd:2.5,totalTime:30});assert.ok(extreme.error);
+console.log('PASS: default response converges; stopped flywheels reach fall limit; high damping stays finite; excessive workload is bounded.');

@@ -1,0 +1,13 @@
+---
+import {getEntry} from 'astro:content';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import {getImage} from 'astro:assets';
+import still from '../../assets/projects/ftc-3.jpg';
+const entry=await getEntry('projects','2025-08-12-pcb-demo---copy-3');
+const poster=await getImage({src:still,width:1280,format:'webp'});
+---
+<ProjectLayout entry={entry} showCover={false}>
+ <figure slot="before-copy" class="demo-video"><video controls playsinline preload="metadata" poster={poster.src} aria-label="2019 Team 10637 robot movement demonstration"><source src="/assets/ftc-demo.webm" type="video/webm"/><source src="/assets/ftc-demo.mp4" type="video/mp4"/><a href="/assets/ftc-demo.mp4">Download the demonstration video</a></video><figcaption>Team 10637 · 2019 movement demonstration · 13 seconds, no audio.</figcaption></figure>
+ <h2>Building for competition</h2><p>My FTC work included a motorized lifting mechanism built with drawer sliders and sprockets, designed to let the robot lift itself for the endgame objective.</p>
+ <h2>See the robot in motion</h2><p>The recording above shows the robot moving outdoors. The gallery below pulls out three full-resolution frames from that recording; it documents the movement demonstration, rather than a scored competition run or a verified lift test.</p>
+</ProjectLayout>

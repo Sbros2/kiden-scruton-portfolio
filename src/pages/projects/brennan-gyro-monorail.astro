@@ -1,0 +1,18 @@
+---
+import {getEntry} from 'astro:content';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import GyroSim from '../../components/GyroSim.jsx';
+import ProjectImage from '../../components/ProjectImage.astro';
+import {projectMedia} from '../../data/projectMedia';
+const entry=await getEntry('projects','brennan-gyro-monorail');
+---
+<ProjectLayout entry={entry} hideGallery>
+ <h2>Why this build matters to me</h2><p>The monorail was one of my more ambitious hardware projects. The challenge was to resist tipping with two counter-rotating flywheels and controlled actuation, bringing a mechanical assembly, electronics, and a dynamic model together in one prototype.</p><p>This is the kind of engineering I enjoy most: choosing and making parts, integrating them, and finding out what the physical system demands beyond the simulation.</p>
+ <h2>Building and testing</h2><p>The hardware included a cart, flywheel assembly, motors, and a prototype motor controller using a MOSFET and drill battery. The build was semi-functional: excessive flywheel weight and inconsistent motor speeds limited its performance.</p>
+ <h2>Lessons from the prototype</h2><p>The next iteration would use lighter flywheels and independent closed-loop speed control. The project showed how actuator limits and mechanical inertia can constrain an otherwise promising control model.</p>
+ <h2>My engineering contribution</h2><p>The final report credits my work on mechanical design and parts selection, including flywheels, motors, bearings, and five printed adapters and mounts. I also wired and programmed the Arduino control system. Wilondja Jerome and I worked together on the LabVIEW simulation; Evan Wheeler contributed to the physical build and troubleshooting.</p>
+ <ProjectImage media={projectMedia['brennan-gyro-monorail'].gallery[0]} />
+ <h2>Sensing and control implementation</h2><p>The documented prototype used an MPU6050 sensor, Arduino Uno, and TB6600 stepper driver. The code appendix reads an accelerometer channel, estimates tilt, smooths the estimate, and maps it to bounded stepper motion. Start/stop thresholds introduce hysteresis so small changes near upright do not repeatedly trigger motion.</p><p>This implementation should be distinguished from the idealized P/D model below: the appendix shows a threshold-based motion routine, rather than a complete implementation of the continuous control equation.</p>
+ <h2>Model setup and testing limit</h2><p>The modeling report records a 20° initial angle, zero initial angular velocity, a 0.01-second step, and a 10-second simulation. Its example uses vehicle inertia 0.1022, single-flywheel inertia 0.003, flywheel speed 628 rad/s, Kp = 3, Kd = 0.01, and mgh = 6.</p><p>The report states that insufficient actuator holding torque prevented the final hardware stabilization tests. Its simulated responses therefore remain model results. The original notes also contain inconsistent model and solver descriptions; the browser simulation presents its own illustrative implementation rather than claiming an exact reproduction of every report figure.</p>
+ <section slot="after-gallery" class="section-block"><div class="section-top"><div><p class="eyebrow">Explore the model</p><h2 id="stabilization-simulator">Stabilization simulator</h2></div></div><div class="prose"><p>Try the report settings, then increase damping or stop the flywheels. This simplified roll model illustrates parameter effects; it is separate from the physical prototype and does not include actuator limits or full coupled flywheel dynamics.</p></div><GyroSim client:load /></section>
+</ProjectLayout>
