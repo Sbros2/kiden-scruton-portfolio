@@ -46,10 +46,9 @@ import fanDeformation from '../assets/projects/fan-deformation.jpg';
 import fanMesh from '../assets/projects/fan-mesh.jpg';
 import fanMoment from '../assets/projects/fan-moment.jpg';
 import fanStress from '../assets/projects/fan-stress.jpg';
-import aeroCylinder from '../assets/projects/aero-cylinder.jpg';
-import aeroCylinderStream from '../assets/projects/aero-cylinder-streamlines.jpg';
 import aeroAirfoil from '../assets/projects/aero-airfoil.jpg';
 import aeroAirfoilStream from '../assets/projects/aero-airfoil-streamlines.jpg';
+import cylinderWakeSim from '../assets/projects/cylinder-wake-sim.gif';
 import crceAssembly from '../assets/projects/crce-assembly.png';
 import crceTop from '../assets/projects/crce-top.png';
 import aiActuator from '../assets/projects/ai-actuator.png';
@@ -73,8 +72,7 @@ export const projectMedia: Record<string, { cover: ProjectImage; gallery: Projec
  {image:fluidHigh,alt:'COMSOL velocity magnitude at 210 kPa inlet pressure.',caption:'Pressure sweep: velocity at 210 kPa inlet pressure. Color scales may differ between cases.',fit:'contain'},
  {image:fluidPressure,alt:'COMSOL pressure contours in the axisymmetric passage.',caption:'Pressure distribution from the second COMSOL report.',fit:'contain'},
  {image:aeroAirfoil,alt:'Numerical pressure contours around a NACA 0017 airfoil.',caption:'External flow: NACA 0017 pressure-contour visualization.',fit:'contain'},
- {image:aeroCylinder,alt:'Numerical pressure contours around a circular cylinder.',caption:'Study 1: pressure contours around a non-rotating cylinder.',fit:'contain'},
- {image:aeroCylinderStream,alt:'Potential-flow streamlines around a cylinder.',caption:'Study 1: cylinder streamlines.',fit:'contain'},
+ {image:cylinderWakeSim,alt:'Animated COMSOL cylinder wake simulation showing flow through a rectangular channel with a circular obstacle.',caption:'Cylinder wake simulation animation from the transient COMSOL study.',fit:'contain'},
 ]},
  'crce-engine': {cover:{image:crceAssembly,alt:'Angled CAD view of the CRCE engine assembly showing the cylinders, central crank mechanism, and supports.',caption:'CRCE engine assembly in SolidWorks. CAD design view.',fit:'contain'},gallery:[
  {image:crceTop,alt:'Top CAD view of the CRCE engine assembly showing the arrangement of cylinders and connecting mechanisms.',caption:'Top view of the assembly, showing the component arrangement.',fit:'contain'},
