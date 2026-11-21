@@ -1,17 +1,18 @@
 ---
 title: "AI-assisted motion control"
-discipline: "Controls & AI research"
-role: "Undergraduate researcher · paper co-author"
+discipline: "Published research · Controls & AI"
+recognition: "Published paper · ASME IMECE 2026"
+role: "Published paper co-author"
 outcome: "Iterative controller study with physical validation"
 order: 8
 date: "2026-07-13"
-summary: "Using actuator data, an empirical model, and iterative AI-assisted tuning to improve a hydraulic fuzzy controller."
+summary: "Co-authored a published ASME IMECE 2026 paper on AI-assisted tuning of a hydraulic fuzzy controller, validated through physical testing."
 tags: ["LabVIEW", "Python", "Fuzzy control", "Experimental analysis"]
 ---
 ## Making AI useful at the workbench
 This research connected AI-assisted controller design to a real digital hydraulic linear actuator. The question was practical: could a model-informed revision improve the way the piston followed a target, and would the improvement survive physical testing?
 
-I contributed to the research and co-authored **AI-Enhanced Motion Control for Digital Hydraulic Linear Actuators**, manuscript IMECE2026-193162. My project records include the controller-design workflow, analysis, and revisions explaining how the AI suggestions were implemented and evaluated.
+I contributed to the research and co-authored **AI-Enhanced Motion Control for Digital Hydraulic Linear Actuators**, published ASME IMECE 2026 paper IMECE2026-193162. My project records include the controller-design workflow, analysis, and revisions explaining how the AI suggestions were implemented and evaluated.
 
 ## The iterative optimization loop
 We started with an operator-designed fuzzy controller in LabVIEW. Position error drove two valve duty-cycle outputs. The AI received the original controller, an empirical actuator model, baseline simulation, five physical runs, and extracted performance metrics.
@@ -41,4 +42,4 @@ The most useful result was understanding the tradeoff. A faster revision did not
 The test campaign used an unloaded actuator. Operating pressure and oil temperature were not recorded, and the reduced model omitted several hydraulic effects. These results describe the tested configuration and trajectory.
 
 ## The paper
-The final draft lists Claudio Campana, Kiden Scruton, Kyle Burke, Shihab Sarwar, Asif Kingshuk, and Akin Tatoglu as authors. It is prepared for ASME’s International Mechanical Engineering Congress and Exposition (IMECE 2026). [Read the final draft](https://raw.githubusercontent.com/Sbros2/kiden-scruton-portfolio/main/public/documents/ai-motion-control-manuscript.pdf), the source for this page’s figures and reported results.
+The final draft lists Claudio Campana, Kiden Scruton, Kyle Burke, Shihab Sarwar, Asif Kingshuk, and Akin Tatoglu as authors. Published for ASME’s International Mechanical Engineering Congress and Exposition (IMECE 2026). [Read the paper](https://raw.githubusercontent.com/Sbros2/kiden-scruton-portfolio/main/public/documents/ai-motion-control-manuscript.pdf), the source for this page’s figures and reported results.
